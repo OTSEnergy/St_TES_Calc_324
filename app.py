@@ -130,7 +130,7 @@ def pull_excel_data(uploaded_file):
                 "Model_Settings": settings
             }
 
-            #FINAL CONCATENATION
+            # FINAL CONCATENATION
             df_base['Temp'] = pd.to_numeric(df_base['Temp'], errors='coerce')
             df_base['Whole House'] = pd.to_numeric(df_base['Whole House'], errors='coerce').fillna(0)
             for col in ['Baseline_HP', 'Baseline_Backup']:
@@ -140,6 +140,15 @@ def pull_excel_data(uploaded_file):
             df_final = pd.concat([df_base.reset_index(drop=True), 
                                   df_ets1.drop(columns=['Timestamp']).reset_index(drop=True),
                                   df_ets2.drop(columns=['Timestamp']).reset_index(drop=True)], axis=1)
+
+            # Sanitize the Timestamp directly in python memory so the Date picker functions perfectly
+            try:
+                df_final['Timestamp'] = pd.to_datetime(df_final['Timestamp'], errors='coerce')
+                # If there are completely corrupted rows that coerce to NaT (Not a Time), fill them with a dummy sequence
+                if df_final['Timestamp'].isna().any():
+                     df_final['Timestamp'] = pd.date_range(start='2023-01-01 00:00:00', periods=len(df_final), freq='H')
+            except Exception:
+                df_final['Timestamp'] = pd.date_range(start='2023-01-01 00:00:00', periods=len(df_final), freq='H')
 
             st.session_state['df'] = df_final
             st.session_state['summary'] = summary_data
@@ -157,13 +166,6 @@ if 'summary' not in st.session_state:
 
 df = st.session_state['df']
 summary = st.session_state['summary']
-
-# Ensure Timestamp is datetime
-if df is not None:
-    try:
-        df['Timestamp'] = pd.to_datetime(df['Timestamp'])
-    except Exception:
-        df['Timestamp'] = pd.date_range(start='2023-01-01 00:00:00', periods=len(df), freq='H')
 
 # ---------------------------------------------------------
 # SIDEBAR CONFIGURATION

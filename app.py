@@ -14,8 +14,8 @@ import seaborn as sns
 import numpy as np
 
 # Configure the browser tab title and the default wide page layout
-st.set_page_config(layout="wide", page_title="TES Simulation Viewer")
-st.title("TES Scenario Evaluation & Simulation")
+st.set_page_config(layout="wide", page_title="ETS Simulation Viewer")
+st.title("ETS Scenario Evaluation & Simulation")
 
 def pull_excel_data(uploaded_file):
     with st.spinner("Crunching Excel data... this usually takes 30-60 seconds depending on file size."):

@@ -152,6 +152,7 @@ def pull_excel_data(uploaded_file):
 
             st.session_state['df'] = df_final
             st.session_state['summary'] = summary_data
+            st.session_state['filename'] = uploaded_file.name
             
             st.success("Data extracted successfully!")
 
@@ -163,9 +164,18 @@ if 'df' not in st.session_state:
     st.session_state['df'] = None
 if 'summary' not in st.session_state:
     st.session_state['summary'] = None
+if 'filename' not in st.session_state:
+    st.session_state['filename'] = None
 
 df = st.session_state['df']
 summary = st.session_state['summary']
+
+# Show uploaded filename as a subtle sub-heading beneath the main title
+if st.session_state['filename']:
+    st.markdown(
+        f"<p style='margin-top:-18px; color:gray; font-size:0.9em;'>📂 {st.session_state['filename']}</p>",
+        unsafe_allow_html=True
+    )
 
 # ---------------------------------------------------------
 # SIDEBAR CONFIGURATION

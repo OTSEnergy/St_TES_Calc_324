@@ -146,9 +146,9 @@ def pull_excel_data(uploaded_file):
                 df_final['Timestamp'] = pd.to_datetime(df_final['Timestamp'], errors='coerce')
                 # If there are completely corrupted rows that coerce to NaT (Not a Time), fill them with a dummy sequence
                 if df_final['Timestamp'].isna().any():
-                     df_final['Timestamp'] = pd.date_range(start='2023-01-01 00:00:00', periods=len(df_final), freq='H')
+                     df_final['Timestamp'] = pd.date_range(start='2023-01-01 00:00:00', periods=len(df_final), freq='h')
             except Exception:
-                df_final['Timestamp'] = pd.date_range(start='2023-01-01 00:00:00', periods=len(df_final), freq='H')
+                df_final['Timestamp'] = pd.date_range(start='2023-01-01 00:00:00', periods=len(df_final), freq='h')
 
             st.session_state['df'] = df_final
             st.session_state['summary'] = summary_data
